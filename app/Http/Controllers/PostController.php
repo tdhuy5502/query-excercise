@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -78,5 +79,68 @@ class PostController extends Controller
         dd($posts);
     }
 
+    public function addTags()
+    {
+        $tagName = [
+            ['name' => 'Tag 1'],
+            ['name' => 'Tag 2'],
+            ['name' => 'Tag 3']
+        ];
+        Tag::insert($tagName);
 
+        $tagIds = Tag::all()->pluck('id');
+
+        $posts = Post::all();
+
+        foreach($posts as $post)
+        {
+            $post->tags()->attach($tagIds);
+        }
+
+        return true;
+    }
+
+    public function getTags()
+    {
+        $post = Post::find(1);
+
+        $tags = $post->tags;
+
+        dd($tags);
+    }
+
+    public function getByTagName()
+    {
+        $posts = Post::whereHas('tags', function($query){
+            $query->where('name','Eloquent');
+        })->get(); 
+
+        dd($posts);
+    }
+
+    public function postWithCondition()
+    {
+        $posts = Post::whereHas('comments',function($cmtQuery){
+            $cmtQuery->havingRaw('COUNT(*) > 5')
+            ->whereHas('user',function($userQuery){
+                $userQuery->where('email','LIKE','%.@example.com');
+            });
+        })->get();
+
+        dd($posts);
+    }
+
+    public function postNow()
+    {
+        $posts = Post::createdThisMonth()->get();
+
+        dd($posts);
+    }
+
+    public function userPostNow()
+    {
+        $posts = Post::where('user_id',1)->createdThisMonth()->get();
+
+        dd($posts);
+    }
 }
