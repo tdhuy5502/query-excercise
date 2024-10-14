@@ -15,29 +15,29 @@ class UserController extends Controller
         // non loop query
         User::insert([
             [
-                'name' => 'Name0',
-                'email' => 'Email0',
-                'password' => Hash::make('password')
+                'name' => 'Name011',
+                'email' => 'Email123',
+                'password' => '12345678'
             ],
             [
-                'name' => 'Name1',
-                'email' => 'Email1',
-                'password' => Hash::make('password')
+                'name' => 'Name111',
+                'email' => 'Email1131231',
+                'password' => '12345678'
             ],
             [
-                'name' => 'Name2',
-                'email' => 'Email2',
-                'password' => Hash::make('password')
+                'name' => 'Name211',
+                'email' => 'Email2123123',
+                'password' => '12345678'
             ],
             [
-                'name' => 'Name3',
-                'email' => 'Email3',
-                'password' => Hash::make('password')
+                'name' => 'Name113',
+                'email' => 'Email32222',
+                'password' => '12345678'
             ],
             [
-                'name' => 'Name4',
-                'email' => 'Email4',
-                'password' => Hash::make('password')
+                'name' => 'Name114',
+                'email' => 'Email42131231',
+                'password' => '12345678'
             ]
         ]);
 
@@ -91,5 +91,28 @@ class UserController extends Controller
         $count = User::withCount('posts')->pluck('posts_count');
 
         dd($count);
+    }
+
+    public function userWithCondition()
+    {
+        $users  = User::whereHas('posts',function($postQuery){
+            $postQuery->where('content','LIKE','%PHP%')
+            ->whereHas('comments',function($cmtQuery){
+                $cmtQuery->havingRaw('COUNT(*) >= 2');
+            });
+        })->get();
+
+        dd($users);
+    }
+
+    public function createWithMutator()
+    {
+        $user = new User();
+        $user->name = 'Mutator';
+        $user->email = 'mail.@example.com';
+        $user->password = '12345678';
+        $user->save();
+
+        dd($user);
     }
 }

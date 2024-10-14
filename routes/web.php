@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,8 @@ Route::controller(UserController::class)
     Route::get('delete','deleteUser')->name('delete');
     Route::get('get-user-has-posts','getUserHas2Posts')->name('getUserHasPost');
     Route::get('findPostsCount','getPostsCount')->name('getCount');
+    Route::get('userWithCondition','userWithCondition')->name('userWithCondition');
+    Route::get('createWithMutator','createWithMutator')->name('createWithMutator');
 });
 
 Route::controller(PostController::class)
@@ -30,4 +33,19 @@ Route::controller(PostController::class)
     Route::get('delete','delete')->name('delete');
     Route::get('createById','createById')->name('createById');
     Route::get('findByTitle','getPostHasTitle')->name('findByTitle');
+    Route::get('addTag','addTags')->name('addTag');
+    Route::get('getTag','getTags')->name('getTag');
+    Route::get('postWithCondition','postWithCondition')->name('postWithCondition');
+    Route::get('postNow','postNow')->name('postNow');
+    Route::get('userPostNow','userPostNow')->name('userPostNow');
+});
+
+Route::controller(CommentController::class)
+->prefix('/comments')
+->as('comments.')
+->group(function(){
+    Route::get('create','create')->name('create');
+    Route::get('getById','getById')->name('getById');
+    Route::get('updateById','updateById')->name('updateById');
+    Route::get('deleteByUserId','deleteByUserId')->name('deleteByUserId');
 });
