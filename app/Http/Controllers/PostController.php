@@ -10,20 +10,25 @@ class PostController extends Controller
 {
     //
     public function create()
-    {
+    { 
+        //
         $users = User::all();
+        $post_data=[];
 
         foreach($users as $user)
         {
             for($i = 0; $i < 3 ; $i++)
             {
-                $user->posts()->create([
-                    'title' => 'Title' . $i,
-                    'content' => 'Content' .$i,
-                ]);
+                $post_data[] = [
+                    'title' => 'Title ' . $i, 
+                    'Content' => 'Content ' . $i,
+                    'user_id' => $user->id
+                ];
             }
         }
 
+        $posts = Post::insert($post_data);
+        dd($posts);
         return true;
     }
 
@@ -45,12 +50,7 @@ class PostController extends Controller
 
     public function delete()
     {
-        $posts = Post::with('user')->where('user_id',5)->get();
-
-        foreach($posts as $post)
-        {
-            $post->delete();
-        }
+        $posts = Post::with('user')->where('user_id',5)->delete();
 
         return true;
     }
@@ -78,5 +78,5 @@ class PostController extends Controller
         dd($posts);
     }
 
-    
+
 }

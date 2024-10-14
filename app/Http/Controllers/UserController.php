@@ -5,44 +5,41 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     //
     public function create()
     {
-        $users = [
+        // non loop query
+        User::insert([
             [
                 'name' => 'Name0',
                 'email' => 'Email0',
-                'password' => bcrypt(Str::random(10)),
+                'password' => Hash::make('password')
             ],
             [
                 'name' => 'Name1',
                 'email' => 'Email1',
-                'password' => bcrypt(Str::random(10)),
+                'password' => Hash::make('password')
             ],
             [
                 'name' => 'Name2',
                 'email' => 'Email2',
-                'password' => bcrypt(Str::random(10)),
+                'password' => Hash::make('password')
             ],
             [
                 'name' => 'Name3',
                 'email' => 'Email3',
-                'password' => bcrypt(Str::random(10)),
+                'password' => Hash::make('password')
             ],
             [
                 'name' => 'Name4',
                 'email' => 'Email4',
-                'password' => bcrypt(Str::random(10)),
+                'password' => Hash::make('password')
             ]
-        ];
-
-        foreach($users as $user)
-        {
-            User::create($user);
-        }
+        ]);
 
         // insert se tra ve true nhung ko fill timestamp - dung duoc cho ca 1 array data
         // create tra ve model va autofill timestamp - dung cho mot object duy nhat
@@ -51,13 +48,7 @@ class UserController extends Controller
         // [1],[2],[3],
         // ]);
 
-        $insertedUser = User::all();
-        if($insertedUser)
-        {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     public function getName()
@@ -90,7 +81,7 @@ class UserController extends Controller
 
     public function getUserHas2Posts()
     {
-        $users = User::has('posts','>=',2)->get();
+        $users = User::has('posts','>=',3)->get();
 
         dd($users);
     }
